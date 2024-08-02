@@ -1,49 +1,49 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import {MdClose} from 'react-icons/md'
+import { MdClose } from 'react-icons/md'
 
 const ChipInput = ({
-    label,
-    name,
-    placeholder,
-    register,
-    errors,
-    setValue,
-    getValues,
+  label,
+  name,
+  placeholder,
+  register,
+  errors,
+  setValue,
+  getValues,
 }) => {
 
-    const {editCourse, course} = useSelector((state) => state.course)
+  const { editCourse, course } = useSelector((state) => state.course)
 
-    const [chips, setChips] = useState([])
+  const [chips, setChips] = useState([])
 
-    useEffect(() => {
-        if(editCourse){
-            setChips(course?.tag)
-        }
-        register(name, {required:true, validate: (value) => value.length > 0})
-    },[])
-
-    useEffect(() => {
-        setValue(name,chips)
-    },[chips])
-
-    const handleKeyDown = (event) => {
-        if(event.key === "Enter" || event.kry === ","){
-            event.preventDefault();
-            const  chipValue = event.target.value.trim()
-
-            if(chipValue && !chips.includes(chipValue)){
-                const newChips = [...chips, chipValue]
-                setChips(newChips)
-                event.target.value = ""
-            }
-        }
+  useEffect(() => {
+    if (editCourse) {
+      setChips(course?.tag)
     }
+    register(name, { required: true, validate: (value) => value.length > 0 })
+  }, [])
 
-    const handleDeleteChip = (chipIndex) => {
-        const newChips = chips.filter((_,index) => index !== chipIndex)
+  useEffect(() => {
+    setValue(name, chips)
+  }, [chips])
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.kry === ",") {
+      event.preventDefault();
+      const chipValue = event.target.value.trim()
+
+      if (chipValue && !chips.includes(chipValue)) {
+        const newChips = [...chips, chipValue]
         setChips(newChips)
+        event.target.value = ""
+      }
     }
+  }
+
+  const handleDeleteChip = (chipIndex) => {
+    const newChips = chips.filter((_, index) => index !== chipIndex)
+    setChips(newChips)
+  }
   return (
     <div className="flex flex-col space-y-2">
       {/* Render the label for the input */}
@@ -77,7 +77,7 @@ const ChipInput = ({
           type="text"
           placeholder={placeholder}
           onKeyDown={handleKeyDown}
-          className="form-style w-full"
+          className="w-full px-3 py-2 rounded-md bg-richblack-700 text-richblack-100"
         />
       </div>
       {/* Render an error message if the input is required and not filled */}

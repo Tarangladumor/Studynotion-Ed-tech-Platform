@@ -12,14 +12,20 @@ import Footer from '../components/common/Footer'
 import ReviewSlider from '../components/common/ReviewSlider';
 
 const About = () => {
+  // useEffect(() => {
+  //   AOS.init({
+  //     duration: 1000,
+  //   });
+  //   AOS.refresh();
+  // }, []);
   return (
     <div>
       <section className="bg-richblack-700">
         <div className="relative mx-auto flex w-11/12 max-w-maxContent flex-col justify-between gap-10 text-center text-white">
-          <header className="mx-auto py-20 text-4xl font-semibold lg:w-[70%]">
+          <header data-aos="zoom-in" className="mx-auto py-20 text-4xl font-semibold lg:w-[70%]">
             Driving Innovation in Online Education for a
             <HighlightText text={"Brighter Future"} />
-            <p className="mx-auto mt-3 text-center text-base font-medium text-richblack-300 lg:w-[95%]">
+            <p data-aos="zoom-in-down" className="mx-auto mt-3 text-center text-base font-medium text-richblack-300 lg:w-[95%]">
               Studynotion is at the forefront of driving innovation in online
               education. We're passionate about creating a brighter future by
               offering cutting-edge courses, leveraging emerging technologies,
@@ -28,9 +34,9 @@ const About = () => {
           </header>
           <div className="sm:h-[70px] lg:h-[150px]"></div>
           <div className="absolute bottom-0 left-[50%] grid w-[100%] translate-x-[-50%] translate-y-[30%] grid-cols-3 gap-3 lg:gap-5">
-            <img src={BannerImage1} alt="" />
-            <img src={BannerImage2} alt="" />
-            <img src={BannerImage3} alt="" />
+            <img data-aos="flip-right" src={BannerImage1} alt="" />
+            <img data-aos="flip-right" src={BannerImage2} alt="" />
+            <img data-aos="flip-right" src={BannerImage3} alt="" />
           </div>
         </div>
       </section>
@@ -101,28 +107,23 @@ const About = () => {
         </div>
       </section>
 
-      {/* Section - 4 */}
-
       <StatsComponent />
-
-      {/* Section - 5 */}
-      <section className='mx-auto mt-20 flex flex-col w-11/12 max-w-maxContent flx-col justify-center gap-10 text-white mb-10'>
+      <section className="mx-auto mt-20 flex w-11/12 max-w-maxContent flex-col justify-between gap-10 text-white">
         <LearningGrid />
         <ContactFormSection />
       </section>
 
-      <section className="relative mx-auto my-20 flex w-11/12 flex-col items-center justify-between gap-8 bg-richblack-900 text-white">
-        <h1 className="text-center text-4xl font-semibold mt-8"> 
+      <div className="relative mx-auto my-20 flex w-11/12 max-w-maxContent flex-col items-center justify-between gap-8 bg-richblack-900 text-white">
+        {/* Reviws from Other Learner */}
+        <h1 className="text-center text-4xl font-semibold mt-8">
           Reviews from other learners
         </h1>
-        <div className=' w-full'>
-          <ReviewSlider />
-        </div>
-      </section >
-
-  <Footer />
-
-    </div >
+        {/* <ReviewSlider /> */}
+        <ReviewSlider />
+      </div>
+      {/* <Footer /> */}
+      <Footer />
+    </div>
   )
 }
 

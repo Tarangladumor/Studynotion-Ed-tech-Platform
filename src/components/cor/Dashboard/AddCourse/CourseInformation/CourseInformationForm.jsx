@@ -149,111 +149,114 @@ const CourseInformationForm = () => {
     setLoading(false);
   }
   return (
-    <form onSubmit={handleSubmit(onSubmit)}
-      className=' space-y-8 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6'>
-      <div className=' flex flex-col space-y-2'>
-        <label htmlFor='courseTitle' className=' text-sm text-richblack-5'>Course Title<sup>*</sup></label>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="rounded-md border-richblack-700 bg-richblack-800 p-6 space-y-8"
+    >
+      <div className="text-richblack-100">
+        <label htmlFor="courseTitle">
+          Course Title<sup>*</sup>
+        </label>
         <input
-          id='courseTitle'
-          placeholder='Enter Course Title'
+          id="courseTitle"
+          placeholder="Enter Course Title"
           {...register("courseTitle", { required: true })}
-          className='w-full form-style' />
-        {
-          errors.courseTitle && (
-            <span className='ml-2 text-xs tracking-wide text-pink-200'>Course Title Required</span>
-          )
-        }
+          className="w-full px-3 py-2 rounded-md bg-richblack-700 text-richblack-100"
+        />
+        {errors.courseTitle && <span>Course Title is Required**</span>}
       </div>
 
-      <div className=' flex flex-col space-y-2'>
-        <label htmlFor='courseShortDesc' className=' text-sm text-richblack-5'>Course Short Description<sup className='text-pink-200'>*</sup></label>
+      <div className="text-richblack-100">
+        <label htmlFor="courseShortDesc">
+          Course Short Description<sup>*</sup>
+        </label>
         <textarea
-          id='courseShortDesc'
-          placeholder='Enter Description'
+          id="courseShortDesc"
+          placeholder="Enter Description"
           {...register("courseShortDesc", { required: true })}
-          className='min-h-[130px] w-full form-style resize-x-none' />
-        {
-          errors.courseShortDesc && (
-            <span className=' ml-2 text-xs tracking-wide text-pink-200'>Course Description is required</span>
-          )
-        }
+          className="w-full px-3 py-2 rounded-md bg-richblack-700 text-richblack-100 h-[150px]"
+        />
+        {errors.courseShortDesc && (
+          <span>Course Description is required**</span>
+        )}
       </div>
 
-      <div className=' flex flex-col space-y-2'>
-        <label htmlFor='coursePrice' className=' text-sm text-richblack-5'>Course Price<sup className=' text-pink-200'>*</sup></label>
-        <div className='relative'>
-          <input
-            id='coursePrice'
-            placeholder='Enter Course price'
-            {...register("coursePrice", { required: true, valueAsNumber: true, pattern: { value: /^(0|[1-9]\d*)(\.\d+)?$/, } })}
-            className='w-full form-style !pl-12' />
-          <HiOutlineCurrencyRupee className=' absolute left-3 inline-block translate-y-1/2 text-2xl text-richblack-400' />
-        </div>
-        {
-          errors.coursePrice && (
-            <span className=' ml-2 text-xs tracking-wide text-pink-200'>Course Price is Required</span>
-          )
-        }
-        {/* </div> */}
+      <div className="text-richblack-100 relative">
+        <label htmlFor="coursePrice">
+          Course Price<sup>*</sup>
+        </label>
+        <input
+          id="coursePrice"
+          placeholder="Enter Course Price"
+          {...register("coursePrice", {
+            required: true,
+            valueAsNumber: true,
+          })}
+          className="w-full pl-6 pr-3 py-2 rounded-md bg-richblack-700 text-richblack-100"
+        />
+        <HiOutlineCurrencyRupee className="absolute top-[55%] left-1 text-richblack-400" />
+        {errors.coursePrice && <span>Course Price is Required**</span>}
       </div>
 
-      <div className=' flex flex-col space-y-2'>
-        <label htmlFor='courseCategory' className=' text-sm text-richblack-5'>Course Category
-          <sup className='text-pink-200'>*</sup></label>
+      <div className="text-richblack-100">
+        <label htmlFor="courseCategory">
+          Course Category<sup>*</sup>
+        </label>
         <select
-          id='courseCategory'
+          id="courseCategory"
+          className="w-full px-3 py-2 rounded-md bg-richblack-700 text-richblack-100"
           defaultValue=""
           {...register("courseCategory", { required: true })}
-          className='form-style w-full'>
-          <option value="" disabled>Choose a Category</option>
-          {
-            !loading && courseCategories?.map((category, index) => (
+        >
+          <option value="" disabled>
+            Choose a Category
+          </option>
+
+          {!loading &&
+            courseCategories.map((category, index) => (
               <option key={index} value={category?._id}>
-                {
-                  category?.name
-                }
+                {category?.name}
               </option>
-            ))
-          }
+            ))}
         </select>
-        {
-          errors.courseCategories && (
-            <span className='ml-2 text-xs tracking-wide text-pink-200'>Course Category is Required</span>
-          )
-        }
+        {errors.courseCategory && <span>Course Category is Required</span>}
       </div>
 
+      {/* create a custom component for handling tags input */}
       <ChipInput
         label="Tags"
         name="courseTags"
-        placeholder="Enter tags and press enter"
+        placeholder="Enter Tags and press Enter"
         register={register}
         errors={errors}
         setValue={setValue}
-        getValues={getValues} />
+        getValues={getValues}
+      />
 
-
+      {/* create a component for uploading and showing preview of media */}
       <Upload
-        name='courseImage'
-        label='Course Thumbnail'
+        name="courseImage"
+        label="Course Thumbnail"
         register={register}
         setValue={setValue}
         errors={errors}
-        editData={editCourse ? course?.thumbnail : null} />
+        editData={editCourse ? course?.thumbnail : null}
+      />
 
-
-      <div className=' flex flex-col space-y-2'>
-        <label className=' text-sm text-richblack-5' htmlFor='courseBenifits'>benefits of the course<sup className='text-pink-200'>*</sup></label>
+      {/*     Benefits of the Course */}
+      <div className="text-richblack-100">
+        <label>
+          Benefits of the course<sup>*</sup>
+        </label>
         <textarea
-          id='courseBenefits'
-          placeholder='Enter Benefits of the course'
+          id="coursebenefits"
+          placeholder="Enter Benefits of the course"
           {...register("courseBenefits", { required: true })}
-          className='min-h-[130px] w-full form-style resize-x-none' />
-        {
-          errors.courseBenefits && (
-            <span className='ml-2 text-xs tracking-wide text-pink-200'>benefits of the course are required</span>
-          )
-        }
+          className="w-full px-3 py-2 rounded-md bg-richblack-700 text-richblack-100 min-h-[150px]"
+        />
+        {errors.courseBenefits && (
+          <span>Benefits of the course are required**</span>
+        )}
       </div>
 
       <RequirementField
@@ -262,23 +265,27 @@ const CourseInformationForm = () => {
         register={register}
         errors={errors}
         setValue={setValue}
-        getValues={getValues} />
+        getValues={getValues}
+      />
+      <div className="flex gap-x-2">
+        {editCourse && (
+          <button
+            onClick={() => dispatch(setStep(2))}
+            className="flex items-center gap-x-2 text-black bg-richblack-300 rounded-md px-3 py-1"
+          >
+            Continue Without Saving
+          </button>
+        )}
 
-      <div className='flex justify-end gap-x-2'>
-        {
-          editCourse && (
-            <button onClick={() => dispatch(setStep(2))} disabled={loading}
-              className={`flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 py-[8px] px-[20px] font-semibold text-richblack-900`}>
-              Continue Without Saving
-            </button>
-          )
-        }
-
-        <Iconbtn disabled={loading} type='submit' text={!editCourse ? "Next" : "Save Change"}>
+        <div className="flex text-richblack-900 rounded-md px-3 py-1 font-medium items-center text-md bg-yellow-50 w-fit">
+          <button>
+            {
+              !editCourse ? "Next" : "Save Changes"
+            }
+          </button>
           <MdNavigateNext />
-        </Iconbtn>
+        </div>
       </div>
-
     </form>
   )
 }

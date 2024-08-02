@@ -39,7 +39,7 @@ export default function Upload({
   })
 
   const previewFile = (file) => {
-    console.log("FIle.......................",file)
+    console.log("FIle.......................", file)
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onloadend = () => {
@@ -57,15 +57,23 @@ export default function Upload({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFile, setValue])
 
+  const handleBrowseClick = () => {
+    inputRef.current.click();
+  };
+
   return (
     <div className="flex flex-col space-y-2">
       <label className="text-sm text-richblack-5" htmlFor={name}>
         {label} {!viewData && <sup className="text-pink-200">*</sup>}
       </label>
       <div
-        className={`${
-          isDragActive ? "bg-richblack-600" : "bg-richblack-700"
-        } flex min-h-[250px] cursor-pointer items-center justify-center rounded-md border-2 border-dotted border-richblack-500`}
+        className={`${isDragActive ? "bg-richblack-600" : "bg-richblack-700"
+          } flex min-h-[250px] cursor-pointer items-center justify-center rounded-md border-2 border-dotted border-richblack-500`}
+        onClick={(event) => {
+          if (!event.target.tagName.toLowerCase() === "input") {
+            event.stopPropagation();
+          }
+        }}
       >
         {previewSource ? (
           <div className="flex w-full flex-col p-6">
@@ -82,9 +90,9 @@ export default function Upload({
               <button
                 type="button"
                 onClick={() => {
-                  setPreviewSource("")
-                  setSelectedFile(null)
-                  setValue(name, null)
+                  setPreviewSource("");
+                  setSelectedFile(null);
+                  setValue(name, null);
                 }}
                 className="mt-3 text-richblack-400 underline"
               >
@@ -98,7 +106,10 @@ export default function Upload({
             {...getRootProps()}
           >
             <input {...getInputProps()} ref={inputRef} />
-            <div className="grid aspect-square w-14 place-items-center rounded-full bg-pure-greys-800">
+            <div
+              className="grid aspect-square w-14 place-items-center rounded-full bg-pure-greys-800"
+              onClick={handleBrowseClick}
+            >
               <FiUploadCloud className="text-2xl text-yellow-50" />
             </div>
             <p className="mt-2 max-w-[200px] text-center text-sm text-richblack-200">

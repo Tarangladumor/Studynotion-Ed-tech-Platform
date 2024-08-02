@@ -1,9 +1,9 @@
 import React from 'react'
-import {HiOutlineVideoCamera} from 'react-icons/hi'
+import { HiOutlineVideoCamera } from 'react-icons/hi'
 
-const CourseSubSectionAccordion = ({subSec}) => {
+const CourseSubSectionAccordion = ({ subSec }) => {
 
-    console.log("SECTION : ",subSec);
+    console.log("SECTION : ", subSec);
     return (
         <div>
             <div className="flex justify-between py-2">

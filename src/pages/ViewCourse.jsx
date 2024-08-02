@@ -9,45 +9,45 @@ import CourseReviewModal from '../components/cor/View Course/CourseReviewModal';
 
 const ViewCourse = () => {
 
-    const [ reviewModal, setReviewModal] = useState(false);
+  const [reviewModal, setReviewModal] = useState(false);
 
-    const {courseId} = useParams();
+  const { courseId } = useParams();
 
-    const {token} = useSelector((state) => state.auth);
+  const { token } = useSelector((state) => state.auth);
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        const setCourseSpecificDetails = async() => {
-            const courseData = await getFullDetailsOfCourse(courseId,token);
-            dispatch(setCourseSectionData(courseData.courseDetails.courseContent));
-            dispatch(setEntireCourseData(courseData.courseDetails));
-            dispatch(setCompltetdLectures(courseData.completedVideos));
-            let lectures = 0;
-            courseData?.courseDetails?.courseContent?.forEach((Sec) => {
-                lectures += Sec.subSection.length
-            })
+  useEffect(() => {
+    const setCourseSpecificDetails = async () => {
+      const courseData = await getFullDetailsOfCourse(courseId, token);
+      dispatch(setCourseSectionData(courseData.courseDetails.courseContent));
+      dispatch(setEntireCourseData(courseData.courseDetails));
+      dispatch(setCompltetdLectures(courseData.completedVideos));
+      let lectures = 0;
+      courseData?.courseDetails?.courseContent?.forEach((Sec) => {
+        lectures += Sec.subSection.length
+      })
 
-            dispatch(setTotalNoOfLectures(lectures));
-        }
+      dispatch(setTotalNoOfLectures(lectures));
+    }
 
-        setCourseSpecificDetails();
-    },[])
+    setCourseSpecificDetails();
+  }, [])
 
 
-    return (
-        <>
-        <div className="relative flex min-h-[calc(100vh-3.5rem)]">
-          <VideoDetailsSidebar setReviewModal={setReviewModal} />
-          <div className="h-[calc(100vh-3.5rem)] flex-1 overflow-auto">
-            <div className="mx-6">
-              <Outlet />
-            </div>
+  return (
+    <>
+      <div className="relative flex min-h-[calc(100vh-3.5rem)]">
+        <VideoDetailsSidebar setReviewModal={setReviewModal} />
+        <div className="h-[calc(100vh-3.5rem)] flex-1 overflow-auto">
+          <div className="mx-6">
+            <Outlet />
           </div>
         </div>
-        {reviewModal && <CourseReviewModal setReviewModal={setReviewModal} />}
-      </>
-    )
+      </div>
+      {reviewModal && <CourseReviewModal setReviewModal={setReviewModal} />}
+    </>
+  )
 }
 
 export default ViewCourse
