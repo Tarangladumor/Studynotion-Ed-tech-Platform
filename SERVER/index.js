@@ -10,51 +10,62 @@ const paymentRoutes = require("./routers/Payments");
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const {cloudinaryConnect} = require("./config/cloudinary");
+const { cloudinaryConnect } = require("./config/cloudinary");
 const fileUpload = require("express-fileupload");
 const dotenv = require("dotenv");
 
 dotenv.config();
 const PORT = process.env.PORT || 4000;
 
-//database connect
+// Connect to the database
 database.connect();
 
-//middlewares
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
+
 app.use(
     cors({
-        origin:"https://studynotion-ed-tech-platform-brown.vercel.app/",
-        credentials:true,
+        origin: (origin, callback) => {
+            const allowedOrigins = [
+                "https://studynotion-ed-tech-platform-brown.vercel.app",
+                // Add other allowed origins if needed
+            ];
+            if (allowedOrigins.includes(origin) || !origin) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        credentials: true,
     })
-)
+);
 
 app.use(
     fileUpload({
-        useTempFiles:true,
-        tempFileDir:"/tmp"
+        useTempFiles: true,
+        tempFileDir: "/tmp",
     })
-)
+);
 
-//cloudinary connection
+// Cloudinary connection
 cloudinaryConnect();
 
-//routes
+// Routes
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 
-//default route
-app.get("/", (req,res) => {
+// Default route
+app.get("/", (req, res) => {
     return res.json({
-        success:true,
-        message:'Your server is up and running....'
+        success: true,
+        message: "Your server is up and running....",
     });
 });
 
+// Start the server
 app.listen(PORT, () => {
-    console.log(`your server started at ${PORT}`);
-})
-
+    console.log(`Your server started at ${PORT}`);
+});
