@@ -11,14 +11,15 @@ import InstructorSection from '../components/cor/Homepage/InstructorSection';
 import Footer from '../components/common/Footer';
 import ExploreMore from '../components/cor/Homepage/ExploreMore';
 import ReviewSlider from '../components/common/ReviewSlider';
+import AOS from 'aos';
 
 const Home = () => {
-    // useEffect(() => {
-    //     AOS.init({
-    //         duration: 1000,
-    //     });
-    //     AOS.refresh();
-    // }, []);
+    useEffect(() => {
+        AOS.init({
+            duration: 1000,
+        });
+        AOS.refresh();
+    }, []);
     return (
         <>
             {/* Section 1 */}

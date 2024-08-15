@@ -9,6 +9,8 @@ exports.createCategory = async (req, res) => {
     try {
         const { name, description } = req.body;
 
+        console.log(req.body);
+
         if (!name || !description) {
             return res.status(400).json({
                 success: false,
@@ -18,6 +20,7 @@ exports.createCategory = async (req, res) => {
 
         // Create Category in the database
         const categoryDetails = await Category.create({
+            _id: new mongoose.Types.ObjectId(),
             name,
             description,
         });
@@ -32,6 +35,7 @@ exports.createCategory = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: error.message,
+            message: "Hello"
         });
     }
 };

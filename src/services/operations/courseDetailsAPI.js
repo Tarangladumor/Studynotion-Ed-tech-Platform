@@ -111,7 +111,7 @@ export const fetchCourseCategories = async() => {
 export const addCourseDetails = async(data,token) => {
     let result = null;
     const toastId = toast.loading("Loading...")
-    console.log("tOKEN.....",token)
+    console.log("tOKEN.....",data)
     try {
         const response = await apiConnector("POST",CREATE_COURSE_API,data, {
             "Contect-Type":"multipart/form-data",
