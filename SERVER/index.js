@@ -29,6 +29,7 @@ app.use(
         origin: (origin, callback) => {
             const allowedOrigins = [
                 "https://studynotion-ed-tech-platform-brown.vercel.app",
+                "http://localhost:3000"
                 // Add other allowed origins if needed
             ];
             if (allowedOrigins.includes(origin) || !origin) {

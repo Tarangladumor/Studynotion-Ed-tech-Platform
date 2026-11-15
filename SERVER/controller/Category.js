@@ -10,8 +10,6 @@ exports.createCategory = async (req, res) => {
     try {
         const { name, description } = req.body;
 
-        console.log(req.body);
-
         if (!name || !description) {
             return res.status(400).json({
                 success: false,

@@ -1,0 +1,16 @@
+services:
+  server:
+    build: ./SERVER
+    env_file:
+      - .SERVER/.env
+
+  client:
+    build:
+      context:
+        args:
+          REACT_APP_BASE_URL: ${REACT_APP_BASE_URL:-http://localhost:4000/api/v1}
+
+    ports:
+      - "3000:80"
+    depends_on:
+      - server
