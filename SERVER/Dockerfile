@@ -4,4 +4,4 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 COPY . .
 EXPOSE 4000
-CMD ["node","index.ts"]
+CMD ["node","index.js"]
