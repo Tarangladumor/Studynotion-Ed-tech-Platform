@@ -1,5 +1,4 @@
-
-name: Build and push to ECR
+name: Build, push to ECR and deploy to EC2
 
 on:
   push:
@@ -9,26 +8,18 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Download repository code
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Step 2: Configure AWS credentials
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      # Step 3: Login to Amazon ECR
-      - name: Login to Amazon ECR
-        id: ecr
+      - id: ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      # Step 4: Build and push server image
       - name: Build and push server image
         env:
           REGISTRY: ${{ steps.ecr.outputs.registry }}
@@ -37,10 +28,8 @@ jobs:
             -t $REGISTRY/studynotion-server:${{ github.sha }} \
             -t $REGISTRY/studynotion-server:latest \
             ./SERVER
-
           docker push --all-tags $REGISTRY/studynotion-server
 
-      # Step 5: Build and push client image
       - name: Build and push client image
         env:
           REGISTRY: ${{ steps.ecr.outputs.registry }}
@@ -50,5 +39,30 @@ jobs:
             -t $REGISTRY/studynotion-client:${{ github.sha }} \
             -t $REGISTRY/studynotion-client:latest \
             .
-
           docker push --all-tags $REGISTRY/studynotion-client
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Deploy on EC2 through SSM
+        env:
+          INSTANCE_ID: ${{ vars.EC2_INSTANCE_ID }}
+        run: |
+          COMMAND_ID=$(aws ssm send-command \
+            --instance-ids "$INSTANCE_ID" \
+            --document-name "AWS-RunShellScript" \
+            --comment "Deploy latest images" \
+            --parameters 'commands=["set -e","cd /home/ubuntu/studynotion-deploy","set -a; . ./.env; set +a","/snap/bin/aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY","docker compose pull","docker compose up -d","docker image prune -f"]' \
+            --query "Command.CommandId" --output text)
+          aws ssm wait command-executed --command-id "$COMMAND_ID" --instance-id "$INSTANCE_ID" || true
+          STATUS=$(aws ssm get-command-invocation --command-id "$COMMAND_ID" --instance-id "$INSTANCE_ID" --query Status --output text)
+          echo "Deploy status: $STATUS"
+          aws ssm get-command-invocation --command-id "$COMMAND_ID" --instance-id "$INSTANCE_ID" --query StandardErrorContent --output text
+          [ "$STATUS" = "Success" ]
